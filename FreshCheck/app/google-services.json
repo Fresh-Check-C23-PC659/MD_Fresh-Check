@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "600207403706",
+    "project_id": "fresh-check-9967",
+    "storage_bucket": "fresh-check-9967.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600207403706:android:5d419be876369868613083",
+        "android_client_info": {
+          "package_name": "com.example.freshcheck.ui.activities"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600207403706-e02o4athetit7o8lv4jcdcq9pm9ho4bc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.freshcheck.ui.activities",
+            "certificate_hash": "09122faf8323ad92aa82a0dc42349caac71cd75a"
+          }
+        },
+        {
+          "client_id": "600207403706-nei967dto9g3fspg7jtkldgdfui3p89r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBInac0xvz_5nL6Qc1B2SnBnman8_YCnbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600207403706-nei967dto9g3fspg7jtkldgdfui3p89r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
