@@ -1,17 +1,16 @@
 package com.example.freshcheck.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.freshcheck.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    lateinit var auth : FirebaseAuth
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,23 +31,29 @@ class LoginActivity : AppCompatActivity() {
             val email = edEmailLogin.text.toString()
             val password = edPasswordLogin.text.toString()
 
-            if (email.isEmpty()){
-                edEmailLogin.error = "Email Must Be Filled In"
-                edEmailLogin.requestFocus()
-            }
+//            if (email.isEmpty()){
+//                edLoginEmail.error = "Email Must Be Filled In"
+//                edLoginEmail.requestFocus()
+//            }
+//
+//            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+//                edPasswordLogin.error = "Invalid Email"
+//                edPasswordLogin.requestFocus()
+//            }
+//
+//            if (password.isEmpty()){
+//                edPasswordLogin.error = "Password must be filled in"
+//                edPasswordLogin.requestFocus()
+//            }
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                edPasswordLogin.error = "Invalid Email"
-                edPasswordLogin.requestFocus()
-            }
-
-            if (password.isEmpty()){
-                edPasswordLogin.error = "Password must be filled in"
-                edPasswordLogin.requestFocus()
-            }
-
-            loginFirebase(email,password)
+//            loginFirebase(email,password)
+            toHome()
         }
+    }
+
+    private fun toHome() {
+        val homeIntent = Intent(this@LoginActivity, HomeActivity::class.java)
+        startActivity(homeIntent)
     }
 
     private fun toRegister() {

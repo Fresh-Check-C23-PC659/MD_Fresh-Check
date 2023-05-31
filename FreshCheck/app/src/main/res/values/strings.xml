@@ -16,4 +16,8 @@
     <string name="reset_password">Reset Password</string>
     <string name="reset">Reset</string>
     <string name="invalid_email">Invalid Email</string>
+    <string name="home">Home</string>
+    <string name="detection">Detection</string>
+    <string name="history">History</string>
+    <string name="profile">Profile</string>
 </resources>

@@ -12,6 +12,9 @@
         android:theme="@style/Theme.FreshCheck"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.DetectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.HomeActivity"
             android:exported="false" />
         <activity
