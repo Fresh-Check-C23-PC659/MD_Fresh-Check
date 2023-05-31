@@ -1,9 +1,12 @@
 package com.example.freshcheck.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.freshcheck.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -11,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    lateinit var auth : FirebaseAuth
+    private lateinit var auth : FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,31 +31,71 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun handleRegister() {
         binding.apply {
-            val email = edEmailRegister.text.toString()
-            val password = edPasswordRegister.text.toString()
+            val username = edUsernameRegister.text.toString().trim()
+            val email = edEmailRegister.text.toString().trim()
+            val password = edPasswordRegister.text.toString().trim()
 
-            if (email.isEmpty()) {
-                edEmailRegister.error = "Email Must Be Filled In"
-                edEmailRegister.requestFocus()
+            val usernameLayout = tiUsernameRegister
+            val emailLayout = tiEmailRegister
+            val passwordLayout = tiPasswordRegister
+
+            if (username.isEmpty()) {
+                usernameLayout.apply {
+                    helperText = "Username must be filled in"
+                    requestFocus()
+                }
+                return
+            } else {
+                usernameLayout.helperText = null
             }
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                edEmailRegister.error = "Invalid Email"
-                edEmailRegister.requestFocus()
+            when {
+                email.isEmpty() -> {
+                    emailLayout.apply {
+                        helperText = "Email must be filled in"
+                        requestFocus()
+                    }
+                    return
+                }
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                    emailLayout.apply {
+                        helperText = "Invalid Email"
+                        setEndIconOnClickListener {
+                            editText?.setText("")
+                            helperText = null
+                        }
+                        requestFocus()
+                    }
+                    return
+                }
+                else -> emailLayout.helperText = null
             }
 
             if (password.isEmpty()) {
-                edPasswordRegister.error = "Password must be filled in"
-                edPasswordRegister.requestFocus()
+                passwordLayout.apply {
+                    helperText = "Password must be filled in"
+                    requestFocus()
+                }
+                return
+            } else {
+                passwordLayout.helperText = null
             }
-
-            if (password.length < 8) {
-                edPasswordRegister.error = "Password at least 8 characters"
-                edPasswordRegister.requestFocus()
-            }
+            hideKeyboard()
+            usernameLayout.clearFocus()
+            emailLayout.clearFocus()
+            passwordLayout.clearFocus()
             registerFirebase(email, password)
         }
 
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocusView: View? = currentFocus
+        if (currentFocusView != null) {
+            inputMethodManager.hideSoftInputFromWindow(currentFocusView.windowToken, 0)
+        }
     }
 
     private fun toLogin() {
@@ -61,15 +104,32 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerFirebase(email: String, password: String) {
+        showLoading(true)
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
                 if (it.isSuccessful) {
+                    showLoading(false)
                     Toast.makeText(this, "Register Successfully", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                 } else {
+                    showLoading(false)
                     Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.apply {
+            if (isLoading) {
+                btnRegister.isEnabled = false
+                pbRegister.visibility = View.VISIBLE
+                vwBgDimmedRegister.visibility = View.VISIBLE
+            } else {
+                btnRegister.isEnabled = true
+                pbRegister.visibility = View.INVISIBLE
+                vwBgDimmedRegister.visibility = View.INVISIBLE
+            }
+        }
     }
 }
