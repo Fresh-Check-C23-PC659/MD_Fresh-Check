@@ -5,18 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.freshcheck.databinding.FragmentDetectionBinding
+import com.example.freshcheck.databinding.FragmentProfileBinding
 
-class DetectionFragment : Fragment() {
+class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentDetectionBinding? = null
+    private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDetectionBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -24,5 +24,4 @@ class DetectionFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

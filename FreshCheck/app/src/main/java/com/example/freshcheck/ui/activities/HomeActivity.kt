@@ -8,7 +8,9 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.freshcheck.R
 import com.example.freshcheck.databinding.ActivityHomeBinding
 import com.example.freshcheck.ui.fragments.DetectionFragment
+import com.example.freshcheck.ui.fragments.HistoryFragment
 import com.example.freshcheck.ui.fragments.HomeFragment
+import com.example.freshcheck.ui.fragments.ProfileFragment
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -28,6 +30,14 @@ class HomeActivity : AppCompatActivity() {
                     }
                     R.id.nav_detection -> {
                         replaceFragment(DetectionFragment())
+                        true
+                    }
+                    R.id.nav_history -> {
+                        replaceFragment(HistoryFragment())
+                        true
+                    }
+                    R.id.nav_profile -> {
+                        replaceFragment(ProfileFragment())
                         true
                     }
                     else -> false
