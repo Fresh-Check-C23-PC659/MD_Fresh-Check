@@ -6,7 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.LoginActivity">
 
+    <View
+        android:id="@+id/vw_bg_dimmed_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_dimmed"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/pb_login"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -35,12 +58,14 @@
             android:layout_marginVertical="24dp"
             android:hint="@string/email"
             app:endIconMode="clear_text"
+            app:helperTextTextColor="@color/red"
             app:startIconDrawable="@drawable/ic_email_24dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ed_email_login"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -52,6 +77,7 @@
             android:layout_marginBottom="24dp"
             android:hint="@string/password"
             app:endIconMode="password_toggle"
+            app:helperTextTextColor="@color/red"
             app:startIconDrawable="@drawable/ic_lock_24dp">
 
             <com.google.android.material.textfield.TextInputEditText

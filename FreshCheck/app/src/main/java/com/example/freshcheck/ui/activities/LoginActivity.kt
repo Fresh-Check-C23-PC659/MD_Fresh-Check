@@ -1,7 +1,11 @@
 package com.example.freshcheck.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.freshcheck.databinding.ActivityLoginBinding
@@ -28,32 +32,57 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleLogin() {
         binding.apply {
-            val email = edEmailLogin.text.toString()
-            val password = edPasswordLogin.text.toString()
+            val email = edEmailLogin.text.toString().trim()
+            val password = edPasswordLogin.text.toString().trim()
 
-//            if (email.isEmpty()){
-//                edLoginEmail.error = "Email Must Be Filled In"
-//                edLoginEmail.requestFocus()
-//            }
-//
-//            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-//                edPasswordLogin.error = "Invalid Email"
-//                edPasswordLogin.requestFocus()
-//            }
-//
-//            if (password.isEmpty()){
-//                edPasswordLogin.error = "Password must be filled in"
-//                edPasswordLogin.requestFocus()
-//            }
+            val emailLayout = tiEmailLogin
+            val passwordLayout = tiPasswordLogin
 
-//            loginFirebase(email,password)
-            toHome()
+            when {
+                email.isEmpty() -> {
+                    emailLayout.apply {
+                        helperText = "Email must be filled in"
+                        requestFocus()
+                    }
+                    return
+                }
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                    emailLayout.apply {
+                        helperText = "Invalid Email"
+                        setEndIconOnClickListener {
+                            editText?.setText("")
+                            helperText = null
+                        }
+                        requestFocus()
+                    }
+                    return
+                }
+                else -> emailLayout.helperText = null
+            }
+
+            if (password.isEmpty()) {
+                passwordLayout.apply {
+                    helperText = "Password must be filled in"
+                    requestFocus()
+                }
+                return
+            } else {
+                passwordLayout.helperText = null
+            }
+            hideKeyboard()
+            emailLayout.clearFocus()
+            passwordLayout.clearFocus()
+            loginFirebase(email, password)
         }
     }
 
-    private fun toHome() {
-        val homeIntent = Intent(this@LoginActivity, HomeActivity::class.java)
-        startActivity(homeIntent)
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocusView: View? = currentFocus
+        if (currentFocusView != null) {
+            inputMethodManager.hideSoftInputFromWindow(currentFocusView.windowToken, 0)
+        }
     }
 
     private fun toRegister() {
@@ -67,15 +96,32 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginFirebase(email: String, password: String) {
+        showLoading(true)
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
                 if (it.isSuccessful) {
+                    showLoading(false)
                     Toast.makeText(this, "Welcome $email", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                 } else {
+                    showLoading(false)
                     Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.apply {
+            if (isLoading) {
+                btnLogin.isEnabled = false
+                pbLogin.visibility = View.VISIBLE
+                vwBgDimmedLogin.visibility = View.VISIBLE
+            } else {
+                btnLogin.isEnabled = true
+                pbLogin.visibility = View.INVISIBLE
+                vwBgDimmedLogin.visibility = View.INVISIBLE
+            }
+        }
     }
 }
