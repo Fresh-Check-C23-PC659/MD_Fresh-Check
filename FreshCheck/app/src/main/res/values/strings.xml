@@ -20,4 +20,11 @@
     <string name="detection">Detection</string>
     <string name="history">History</string>
     <string name="profile">Profile</string>
+    <string name="banner_home">Banner Home</string>
+    <string name="item_shop">Item Shop</string>
+    <string name="store_name">Store Name</string>
+    <string name="item_name">Item Name</string>
+    <string name="produk_sayur">Produk Sayur</string>
+    <string name="arrow_home_fragment">Arrow Home Fragment</string>
+    <string name="produk_buah">Produk Buah</string>
 </resources>

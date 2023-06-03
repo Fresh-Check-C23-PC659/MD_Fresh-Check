@@ -1,14 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.HomeFragment">
 
-    <TextView
+
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="50dp"
-        android:text="FRAGMENT HOME" />
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_home_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginVertical="24dp"
+                android:contentDescription="@string/banner_home"
+                android:src="@drawable/ic_image_24dp" />
+
+            <View
+                android:id="@+id/divider_home_1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:id="@+id/ll_home_buah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_produk_buah_home"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/produk_buah"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_arrow_home_buah"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/arrow_home_fragment"
+                    android:src="@drawable/ic_arrow_forward_24dp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_item_fruits"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                tools:listitem="@layout/shop_item" />
+
+            <View
+                android:id="@+id/divider_home_2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:id="@+id/ll_home_sayur"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_produk_sayur_home"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/produk_sayur"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_arrow_home_sayur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/arrow_home_fragment"
+                    android:src="@drawable/ic_arrow_forward_24dp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_item_vegetable"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                tools:listitem="@layout/shop_item" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

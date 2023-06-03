@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
             forgotPassword.setOnClickListener { toForgotPassword() }
             tvToRegister.setOnClickListener { toRegister() }
-            btnLogin.setOnClickListener { handleLogin() }
+            btnLogin.setOnClickListener { toHome() }
         }
     }
 
@@ -74,6 +74,11 @@ class LoginActivity : AppCompatActivity() {
             passwordLayout.clearFocus()
             loginFirebase(email, password)
         }
+    }
+
+    private fun toHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
     }
 
     private fun hideKeyboard() {
