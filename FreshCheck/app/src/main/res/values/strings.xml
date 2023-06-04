@@ -27,4 +27,7 @@
     <string name="produk_sayur">Produk Sayur</string>
     <string name="arrow_home_fragment">Arrow Home Fragment</string>
     <string name="produk_buah">Produk Buah</string>
+    <string name="detection_file">Detection File</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>
