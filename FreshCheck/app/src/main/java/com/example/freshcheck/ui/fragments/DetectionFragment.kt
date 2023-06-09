@@ -1,7 +1,6 @@
 package com.example.freshcheck.ui.fragments
 
 import android.Manifest
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.Intent.ACTION_OPEN_DOCUMENT
@@ -13,14 +12,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.freshcheck.data.remote.retrofit.ApiConfig
+import com.example.freshcheck.data.remote.retrofit.ApiService
 import com.example.freshcheck.databinding.FragmentDetectionBinding
 import com.example.freshcheck.ui.activities.ViewFinderActivity
 import com.example.freshcheck.utils.rotateFile
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class DetectionFragment : Fragment() {
@@ -29,6 +36,8 @@ class DetectionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var getFile: File? = null
+
+    private lateinit var apiService: ApiService
 
     private val REQUEST_CODE_PERMISSIONS = 1001
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
@@ -51,6 +60,8 @@ class DetectionFragment : Fragment() {
                     }
                     getFile = file
                     binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(file.path))
+
+                    getFile?.let { uploadFile(it) }
                 }
             }
         }
@@ -73,6 +84,8 @@ class DetectionFragment : Fragment() {
                 rotateFile(file, isBackCamera)
                 getFile = file
                 binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(file.path))
+
+                getFile?.let { uploadFile(it) }
             }
         }
     }
@@ -86,6 +99,9 @@ class DetectionFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        apiService = ApiConfig.getApiService()
+
         super.onViewCreated(view, savedInstanceState)
 
         if (!allPermissionsGranted()) {
@@ -124,6 +140,7 @@ class DetectionFragment : Fragment() {
     }
 
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -149,6 +166,29 @@ class DetectionFragment : Fragment() {
             }
         }
     }
+
+    private fun uploadFile(file: File) {
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+        val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+        lifecycleScope.launch {
+            val response = apiService.uploadFile(filePart)
+            if (response.prediction != 0) {
+                Toast.makeText(
+                    requireContext(),
+                    "File Successfully Uploaded, Prediction : ${response.prediction}",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Failed To Upload File, Error : ${response.error}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
