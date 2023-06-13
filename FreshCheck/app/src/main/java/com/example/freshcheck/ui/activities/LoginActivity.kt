@@ -3,17 +3,29 @@ package com.example.freshcheck.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.freshcheck.ResultSealed
 import com.example.freshcheck.databinding.ActivityLoginBinding
+import com.example.freshcheck.ui.viewmodel.LoginViewModel
+import com.example.freshcheck.ui.viewmodel.ViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
+
+private val TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private val viewModel: LoginViewModel by viewModels {
+        ViewModelFactory.getInstance()
+    }
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
             forgotPassword.setOnClickListener { toForgotPassword() }
             tvToRegister.setOnClickListener { toRegister() }
-            btnLogin.setOnClickListener { toHome() }
+            btnLogin.setOnClickListener { handleLogin() }
         }
     }
 
@@ -46,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     return
                 }
+
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                     emailLayout.apply {
                         helperText = "Invalid Email"
@@ -57,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     return
                 }
+
                 else -> emailLayout.helperText = null
             }
 
@@ -76,10 +90,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun toHome() {
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-    }
 
     private fun hideKeyboard() {
         val inputMethodManager =
@@ -101,19 +111,34 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginFirebase(email: String, password: String) {
-        showLoading(true)
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    showLoading(false)
-                    Toast.makeText(this, "Welcome $email", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    showLoading(false)
-                    Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
+        viewModel.signInWithEmailAndPassword(email, password)
+        lifecycleScope.launch {
+            viewModel.login.collect() {
+                when (it) {
+                    is ResultSealed.Loading -> {
+                        showLoading(true)
+                    }
+
+                    is ResultSealed.Success -> {
+                        showLoading(false)
+                        Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                        Log.d(TAG, it.data.toString())
+                    }
+
+                    is ResultSealed.Error -> {
+                        showLoading(false)
+                        Toast.makeText(this@LoginActivity, it.error, Toast.LENGTH_SHORT)
+                            .show()
+                        Log.e(TAG, it.error)
+                    }
+
+                    else -> Unit
                 }
             }
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

@@ -2,26 +2,37 @@ package com.example.freshcheck.ui.activities
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.freshcheck.ResultSealed
+import com.example.freshcheck.data.User
 import com.example.freshcheck.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.freshcheck.ui.viewmodel.RegisterViewModel
+import com.example.freshcheck.ui.viewmodel.ViewModelFactory
+import kotlinx.coroutines.launch
+
+
+private val TAG = "RegisterActivity"
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var auth : FirebaseAuth
+    private val viewModel: RegisterViewModel by viewModels {
+        ViewModelFactory.getInstance()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
 
         binding.apply {
             tvToLogin.setOnClickListener { toLogin() }
@@ -33,7 +44,12 @@ class RegisterActivity : AppCompatActivity() {
         binding.apply {
             val username = edUsernameRegister.text.toString().trim()
             val email = edEmailRegister.text.toString().trim()
-            val password = edPasswordRegister.text.toString().trim()
+            val password = edPasswordRegister.text.toString()
+
+            val user = User(
+                username,
+                email,
+            )
 
             val usernameLayout = tiUsernameRegister
             val emailLayout = tiEmailRegister
@@ -57,6 +73,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
                     return
                 }
+
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                     emailLayout.apply {
                         helperText = "Invalid Email"
@@ -68,6 +85,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
                     return
                 }
+
                 else -> emailLayout.helperText = null
             }
 
@@ -84,7 +102,7 @@ class RegisterActivity : AppCompatActivity() {
             usernameLayout.clearFocus()
             emailLayout.clearFocus()
             passwordLayout.clearFocus()
-            registerFirebase(email, password)
+            registerFirebase(user, password)
         }
 
     }
@@ -103,20 +121,34 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun registerFirebase(email: String, password: String) {
-        showLoading(true)
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    showLoading(false)
-                    Toast.makeText(this, "Register Successfully", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    showLoading(false)
-                    Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
+    private fun registerFirebase(user: User, password: String) {
+        viewModel.createAccountWithEmailAndPassword(user, password)
+        lifecycleScope.launch {
+            viewModel.register.collect {
+                when (it) {
+                    is ResultSealed.Loading -> {
+                        showLoading(true)
+                    }
+
+                    is ResultSealed.Success -> {
+                        Toast.makeText(this@RegisterActivity, "Register Success", Toast.LENGTH_LONG)
+                            .show()
+                        Log.d(TAG, it.data.toString())
+                        showLoading(false)
+                        toLogin()
+                    }
+
+                    is ResultSealed.Error -> {
+                        Toast.makeText(this@RegisterActivity, "Register Failed", Toast.LENGTH_LONG)
+                            .show()
+                        Log.e(TAG, it.error)
+                        showLoading(false)
+                    }
+
+                    else -> Unit
                 }
             }
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

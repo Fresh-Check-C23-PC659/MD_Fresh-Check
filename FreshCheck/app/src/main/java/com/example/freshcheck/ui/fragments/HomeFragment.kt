@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.freshcheck.databinding.FragmentHomeBinding
-import com.example.freshcheck.ui.activities.adapter.ItemAdapterTest
+import com.example.freshcheck.ui.adapter.ItemAdapterTest
 
 class HomeFragment : Fragment() {
 

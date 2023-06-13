@@ -1,4 +1,4 @@
-package com.example.freshcheck.ui.activities.adapter
+package com.example.freshcheck.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
