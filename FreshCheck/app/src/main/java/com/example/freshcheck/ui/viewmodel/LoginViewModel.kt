@@ -1,27 +1,33 @@
 package com.example.freshcheck.ui.viewmodel
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.freshcheck.ResultSealed
+import com.example.freshcheck.data.Repository
+import com.example.freshcheck.data.preferences.TokenUidPreferences
+import com.example.freshcheck.di.Injection
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel(context: Context) : ViewModel() {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val tokenUidPreferences: TokenUidPreferences = Injection.provideTokenUidPreferences(context)
 
     private val _login = MutableSharedFlow<ResultSealed<FirebaseUser>>()
-    val login  = _login.asSharedFlow()
+    val login = _login.asSharedFlow()
 
     fun signInWithEmailAndPassword(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 viewModelScope.launch {
                     it.user?.let {
+                        tokenUidPreferences.saveTokenUid(it.uid)
                         _login.emit(ResultSealed.Success(it))
                     }
                 }

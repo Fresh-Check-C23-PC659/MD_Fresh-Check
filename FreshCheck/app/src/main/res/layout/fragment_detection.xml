@@ -22,32 +22,40 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_detection_fragment"
                 android:layout_width="match_parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_height="500dp"
+                android:background="@drawable/image_view_bg"
                 android:contentDescription="@string/detection_file"
-                android:src="@drawable/ic_image_24dp" />
+                android:src="@drawable/ic_image_24dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/RoundedCorners"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="32dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginTop="32dp">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_camera_detection"
                     android:layout_width="150dp"
-                    android:layout_height="70dp"
+                    android:layout_height="50dp"
                     android:layout_marginEnd="16dp"
+                    android:drawableStart="@drawable/bg_capture_button"
+                    android:background="@drawable/btn_rounded_bg"
                     android:text="@string/camera" />
 
                 <Button
                     android:id="@+id/btn_gallery"
                     android:layout_width="150dp"
-                    android:layout_height="70dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="16dp"
+                    android:background="@drawable/btn_rounded_bg"
                     android:text="@string/gallery" />
             </LinearLayout>
 

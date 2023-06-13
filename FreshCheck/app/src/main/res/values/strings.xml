@@ -30,4 +30,5 @@
     <string name="detection_file">Detection File</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="logout">Logout</string>
 </resources>

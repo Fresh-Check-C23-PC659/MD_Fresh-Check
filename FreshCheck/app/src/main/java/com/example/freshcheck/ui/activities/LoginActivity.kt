@@ -1,5 +1,6 @@
 package com.example.freshcheck.ui.activities
 
+import ViewModelFactory
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.freshcheck.ResultSealed
 import com.example.freshcheck.databinding.ActivityLoginBinding
 import com.example.freshcheck.ui.viewmodel.LoginViewModel
-import com.example.freshcheck.ui.viewmodel.ViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(this)
     }
     private lateinit var auth: FirebaseAuth
 

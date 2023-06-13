@@ -52,7 +52,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="@string/produk_buah"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_green"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -62,7 +62,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="@string/arrow_home_fragment"
-                    android:src="@drawable/ic_arrow_forward_24dp" />
+                    android:src="@drawable/ic_arrow_forward_24dp"
+                    app:tint="@color/dark_green" />
 
             </LinearLayout>
 
@@ -97,7 +98,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="@string/produk_sayur"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_green"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -107,7 +108,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="@string/arrow_home_fragment"
-                    android:src="@drawable/ic_arrow_forward_24dp" />
+                    android:src="@drawable/ic_arrow_forward_24dp"
+                    app:tint="@color/dark_green" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

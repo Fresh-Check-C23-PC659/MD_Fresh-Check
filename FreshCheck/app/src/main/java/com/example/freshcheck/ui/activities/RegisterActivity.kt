@@ -1,5 +1,6 @@
 package com.example.freshcheck.ui.activities
 
+import ViewModelFactory
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +16,6 @@ import com.example.freshcheck.ResultSealed
 import com.example.freshcheck.data.User
 import com.example.freshcheck.databinding.ActivityRegisterBinding
 import com.example.freshcheck.ui.viewmodel.RegisterViewModel
-import com.example.freshcheck.ui.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -25,7 +25,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

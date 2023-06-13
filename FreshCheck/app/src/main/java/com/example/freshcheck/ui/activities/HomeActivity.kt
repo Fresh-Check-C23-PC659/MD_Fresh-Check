@@ -3,6 +3,7 @@ package com.example.freshcheck.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.freshcheck.R
@@ -47,6 +48,15 @@ class HomeActivity : AppCompatActivity() {
 
         replaceFragment(HomeFragment())
     }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finishAffinity()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
 
     private fun replaceFragment(fragment: Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
