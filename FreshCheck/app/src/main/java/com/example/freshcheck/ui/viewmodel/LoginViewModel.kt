@@ -22,6 +22,9 @@ class LoginViewModel(context: Context) : ViewModel() {
     private val _login = MutableSharedFlow<ResultSealed<FirebaseUser>>()
     val login = _login.asSharedFlow()
 
+    private val _resetPassword = MutableSharedFlow<ResultSealed<String>>()
+    val resetPassword = _resetPassword.asSharedFlow()
+
     fun signInWithEmailAndPassword(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
@@ -36,5 +39,22 @@ class LoginViewModel(context: Context) : ViewModel() {
                     _login.emit(ResultSealed.Error(it.message.toString()))
                 }
             }
+    }
+
+    fun resetPassword(email: String) {
+        viewModelScope.launch {
+            _resetPassword.emit(ResultSealed.Loading)
+
+            firebaseAuth.sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+                    viewModelScope.launch {
+                        _resetPassword.emit(ResultSealed.Success(email))
+                    }
+                }.addOnFailureListener {
+                    viewModelScope.launch {
+                        _resetPassword.emit(ResultSealed.Error(it.message.toString()))
+                    }
+                }
+        }
     }
 }

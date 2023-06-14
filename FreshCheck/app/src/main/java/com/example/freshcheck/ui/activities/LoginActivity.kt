@@ -8,17 +8,24 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.freshcheck.R
 import com.example.freshcheck.ResultSealed
 import com.example.freshcheck.databinding.ActivityLoginBinding
 import com.example.freshcheck.ui.viewmodel.LoginViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
-private val TAG = "LoginActivity"
+private const val TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
 
@@ -27,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var auth: FirebaseAuth
+    private lateinit var dialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +44,40 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         binding.apply {
-            forgotPassword.setOnClickListener { toForgotPassword() }
+            forgotPassword.setOnClickListener {
+                setupBottomSheetDialog { email ->
+                    viewModel.resetPassword(email)
+                }
+            }
             tvToRegister.setOnClickListener { toRegister() }
             btnLogin.setOnClickListener { handleLogin() }
         }
+
+        lifecycleScope.launch {
+            viewModel.resetPassword.collect {
+                when (it) {
+                    is ResultSealed.Loading -> {
+                        showLoading(true)
+                    }
+
+                    is ResultSealed.Success -> {
+                        val view: View = findViewById(R.id.tv_to_register)
+                        showLoading(false)
+                        Snackbar.make(view, "Link was sent to your email", Snackbar.LENGTH_LONG).show()
+                    }
+
+                    is ResultSealed.Error -> {
+                        val view: View = findViewById(R.id.tv_to_register)
+                        showLoading(false)
+                        Snackbar.make(view, "Error : ${it.error}", Snackbar.LENGTH_LONG).show()
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
     }
+
 
     private fun handleLogin() {
         binding.apply {
@@ -105,15 +142,32 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun toForgotPassword() {
-        val intent = Intent(this, ForgotPasswordActivity::class.java)
-        startActivity(intent)
+    private fun setupBottomSheetDialog(onSendClick: (String) -> Unit) {
+        dialog = BottomSheetDialog(this, R.style.DialogStyle)
+        val view = layoutInflater.inflate(R.layout.reset_password_dialog, null)
+        dialog.setContentView(view)
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.show()
+
+        val edEmail = view.findViewById<EditText>(R.id.ed_reset_password)
+        val btnSend = view.findViewById<Button>(R.id.btn_send_reset_password)
+        val btnCancel = view.findViewById<Button>(R.id.btn_cancel_reset_password)
+
+        btnSend.setOnClickListener {
+            val email = edEmail.text.toString().trim()
+            onSendClick(email)
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     private fun loginFirebase(email: String, password: String) {
         viewModel.signInWithEmailAndPassword(email, password)
         lifecycleScope.launch {
-            viewModel.login.collect() {
+            viewModel.login.collect {
                 when (it) {
                     is ResultSealed.Loading -> {
                         showLoading(true)

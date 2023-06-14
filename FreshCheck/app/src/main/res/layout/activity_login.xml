@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/login"
+            android:textAllCaps="true"
             android:textAlignment="center"
             android:textColor="@color/light_green"
             android:textSize="24sp"
@@ -104,7 +105,7 @@
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_rounded_bg"
             android:text="@string/login"

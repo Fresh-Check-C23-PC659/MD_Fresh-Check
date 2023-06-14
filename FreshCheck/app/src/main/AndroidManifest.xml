@@ -25,9 +25,6 @@
             android:name=".ui.activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activities.RegisterActivity"
             android:exported="false" />
         <activity

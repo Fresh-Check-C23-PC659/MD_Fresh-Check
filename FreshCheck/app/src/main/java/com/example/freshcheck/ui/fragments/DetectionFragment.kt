@@ -2,8 +2,10 @@ package com.example.freshcheck.ui.fragments
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_OPEN_DOCUMENT
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -19,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.freshcheck.R
 import com.example.freshcheck.data.remote.retrofit.ApiConfig
 import com.example.freshcheck.data.remote.retrofit.ApiService
 import com.example.freshcheck.databinding.FragmentDetectionBinding
@@ -34,13 +37,11 @@ class DetectionFragment : Fragment() {
 
     private var _binding: FragmentDetectionBinding? = null
     private val binding get() = _binding!!
-
     private var getFile: File? = null
-
     private lateinit var apiService: ApiService
 
-    private val REQUEST_CODE_PERMISSIONS = 1001
-    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     private val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -58,6 +59,9 @@ class DetectionFragment : Fragment() {
                     file.outputStream().use { outputStream ->
                         inputStream?.copyTo(outputStream)
                     }
+
+                    sharedPreferences.edit().putString(PREF_FILE_PATH_KEY, file.path).apply()
+
                     getFile = file
                     binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(file.path))
 
@@ -69,7 +73,7 @@ class DetectionFragment : Fragment() {
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) {
+    ) { it ->
         if (it.resultCode == CAMERA_X_RESULT) {
             val myFile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 it.data?.getSerializableExtra("picture", File::class.java)
@@ -84,6 +88,8 @@ class DetectionFragment : Fragment() {
                 rotateFile(file, isBackCamera)
                 getFile = file
                 binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(file.path))
+
+                sharedPreferences.edit().putString(PREF_FILE_PATH_KEY, file.path).apply()
 
                 getFile?.let { uploadFile(it) }
             }
@@ -101,6 +107,8 @@ class DetectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         apiService = ApiConfig.getApiService()
+        sharedPreferences =
+            requireActivity().getSharedPreferences(PREF_FILE_KEY, Context.MODE_PRIVATE)
 
         super.onViewCreated(view, savedInstanceState)
 
@@ -160,7 +168,7 @@ class DetectionFragment : Fragment() {
                     myFile?.let { file ->
                         rotateFile(file, isBackCamera)
                         getFile = file
-                        binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(file.path))
+                        binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(getFile?.path))
                     }
                 }
             }
@@ -195,9 +203,36 @@ class DetectionFragment : Fragment() {
         _binding = null
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        if (getFile != null) {
+            sharedPreferences.edit().putString(PREF_FILE_PATH_KEY, getFile?.path).apply()
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        val filePath = sharedPreferences.getString(PREF_FILE_PATH_KEY, null)
+        if (!filePath.isNullOrEmpty()) {
+            val file = File(filePath)
+            if (file.exists()) {
+                binding.ivDetectionFragment.setImageBitmap(BitmapFactory.decodeFile(file.path))
+            } else {
+                binding.ivDetectionFragment.setImageResource(R.drawable.ic_image_24dp)
+            }
+        } else {
+            binding.ivDetectionFragment.setImageResource(R.drawable.ic_image_24dp)
+        }
+    }
+
     companion object {
         const val CAMERA_X_RESULT = 200
         private const val REQUEST_CODE_CAMERA = 102
+        private const val REQUEST_CODE_PERMISSIONS = 1001
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        const val PREF_FILE_KEY = "MyPrefs"
+        const val PREF_FILE_PATH_KEY = "filePath"
     }
-
 }

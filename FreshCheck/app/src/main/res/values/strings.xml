@@ -31,4 +31,8 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="logout">Logout</string>
+    <string name="fresh_check">Fresh Check</string>
+    <string name="reset_link_send">The reset link will be emailed to you.</string>
+    <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
 </resources>

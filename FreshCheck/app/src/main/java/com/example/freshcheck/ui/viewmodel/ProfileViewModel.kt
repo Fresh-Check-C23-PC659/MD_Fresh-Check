@@ -42,7 +42,7 @@ class ProfileViewModel : ViewModel() {
             }
     }
 
-    fun logout(){
+    fun logout() {
         firebaseAuth.signOut()
     }
 }
