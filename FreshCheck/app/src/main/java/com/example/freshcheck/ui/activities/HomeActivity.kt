@@ -1,6 +1,5 @@
 package com.example.freshcheck.ui.activities
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
@@ -58,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    private fun replaceFragment(fragment: Fragment) {
+     private fun replaceFragment(fragment: Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.home_container, fragment)
         transaction.addToBackStack(null)

@@ -11,10 +11,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -25,8 +25,10 @@ import com.example.freshcheck.R
 import com.example.freshcheck.data.remote.retrofit.ApiConfig
 import com.example.freshcheck.data.remote.retrofit.ApiService
 import com.example.freshcheck.databinding.FragmentDetectionBinding
+import com.example.freshcheck.ui.activities.ResultActivity
 import com.example.freshcheck.ui.activities.ViewFinderActivity
 import com.example.freshcheck.utils.rotateFile
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -147,6 +149,10 @@ class DetectionFragment : Fragment() {
         cameraLauncher.launch(cameraIntent)
     }
 
+    private fun showSnackbar(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
+    }
+
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -175,26 +181,34 @@ class DetectionFragment : Fragment() {
         }
     }
 
+
     private fun uploadFile(file: File) {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
+        showLoading(true)
+
         lifecycleScope.launch {
-            val response = apiService.uploadFile(filePart)
-            if (response.prediction != 0) {
-                Toast.makeText(
-                    requireContext(),
-                    "File Successfully Uploaded, Prediction : ${response.prediction}",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Failed To Upload File, Error : ${response.error}",
-                    Toast.LENGTH_LONG
-                ).show()
+            try {
+                val response = apiService.uploadFile(filePart)
+
+                val resultIntent = Intent(requireContext(), ResultActivity::class.java)
+                val bundle = Bundle().apply {
+                    putString("imagePath", file.path)
+                    putString("name", response.name)
+                    putString("prediction", response.prediction)
+                }
+                resultIntent.putExtras(bundle)
+                startActivity(resultIntent)
+
+            } catch (e: Exception) {
+                showSnackbar("Upload failed: ${e.message}")
+                Log.e("SINI YANG DITEST", e.message.toString())
+            } finally {
+                showLoading(false)
             }
         }
+
     }
 
 
@@ -224,6 +238,16 @@ class DetectionFragment : Fragment() {
             }
         } else {
             binding.ivDetectionFragment.setImageResource(R.drawable.ic_image_24dp)
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.apply {
+            if (isLoading) {
+                pbDetection.visibility = View.VISIBLE
+            } else {
+                pbDetection.visibility = View.GONE
+            }
         }
     }
 

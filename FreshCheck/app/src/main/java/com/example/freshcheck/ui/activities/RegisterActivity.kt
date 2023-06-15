@@ -16,10 +16,11 @@ import com.example.freshcheck.ResultSealed
 import com.example.freshcheck.data.User
 import com.example.freshcheck.databinding.ActivityRegisterBinding
 import com.example.freshcheck.ui.viewmodel.RegisterViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-private val TAG = "RegisterActivity"
+private const val TAG = "RegisterActivity"
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -123,12 +124,11 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerFirebase(user: User, password: String) {
         viewModel.createAccountWithEmailAndPassword(user, password)
-        lifecycleScope.launch {
+        showLoading(true)
+
+        lifecycleScope.launch(Dispatchers.Main) {
             viewModel.register.collect {
                 when (it) {
-                    is ResultSealed.Loading -> {
-                        showLoading(true)
-                    }
 
                     is ResultSealed.Success -> {
                         Toast.makeText(this@RegisterActivity, "Register Success", Toast.LENGTH_LONG)
@@ -139,7 +139,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
 
                     is ResultSealed.Error -> {
-                        Toast.makeText(this@RegisterActivity, "Register Failed", Toast.LENGTH_LONG)
+                        Toast.makeText(this@RegisterActivity, it.error, Toast.LENGTH_LONG)
                             .show()
                         Log.e(TAG, it.error)
                         showLoading(false)
@@ -154,13 +154,11 @@ class RegisterActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.apply {
             if (isLoading) {
-                btnRegister.isEnabled = false
+                btnRegister.visibility = View.GONE
                 pbRegister.visibility = View.VISIBLE
-                vwBgDimmedRegister.visibility = View.VISIBLE
             } else {
-                btnRegister.isEnabled = true
-                pbRegister.visibility = View.INVISIBLE
-                vwBgDimmedRegister.visibility = View.INVISIBLE
+                btnRegister.visibility = View.VISIBLE
+                pbRegister.visibility = View.GONE
             }
         }
     }

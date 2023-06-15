@@ -6,6 +6,9 @@ data class Response(
     @field:SerializedName("error")
     val error: String,
 
+    @field:SerializedName("name")
+    val name: String,
+
     @field:SerializedName("prediction")
-    val prediction: Int,
+    val prediction: String,
 )

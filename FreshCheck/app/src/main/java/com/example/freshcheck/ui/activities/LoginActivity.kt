@@ -1,6 +1,7 @@
 package com.example.freshcheck.ui.activities
 
 import ViewModelFactory
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -21,8 +22,8 @@ import com.example.freshcheck.ui.viewmodel.LoginViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val TAG = "LoginActivity"
@@ -63,7 +64,8 @@ class LoginActivity : AppCompatActivity() {
                     is ResultSealed.Success -> {
                         val view: View = findViewById(R.id.tv_to_register)
                         showLoading(false)
-                        Snackbar.make(view, "Link was sent to your email", Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(view, "Link was sent to your email", Snackbar.LENGTH_LONG)
+                            .show()
                     }
 
                     is ResultSealed.Error -> {
@@ -142,6 +144,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    @SuppressLint("InflateParams")
     private fun setupBottomSheetDialog(onSendClick: (String) -> Unit) {
         dialog = BottomSheetDialog(this, R.style.DialogStyle)
         val view = layoutInflater.inflate(R.layout.reset_password_dialog, null)
@@ -166,27 +169,25 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginFirebase(email: String, password: String) {
         viewModel.signInWithEmailAndPassword(email, password)
-        lifecycleScope.launch {
+        showLoading(true) // Show loading state initially
+
+        lifecycleScope.launch(Dispatchers.Main) {
             viewModel.login.collect {
                 when (it) {
-                    is ResultSealed.Loading -> {
-                        showLoading(true)
-                    }
-
                     is ResultSealed.Success -> {
-                        showLoading(false)
                         Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                         }
                         Log.d(TAG, it.data.toString())
+                        showLoading(false)
                     }
 
                     is ResultSealed.Error -> {
-                        showLoading(false)
                         Toast.makeText(this@LoginActivity, it.error, Toast.LENGTH_SHORT)
                             .show()
                         Log.e(TAG, it.error)
+                        showLoading(false)
                     }
 
                     else -> Unit
@@ -195,16 +196,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+
     private fun showLoading(isLoading: Boolean) {
         binding.apply {
             if (isLoading) {
-                btnLogin.isEnabled = false
+                btnLogin.visibility = View.GONE
                 pbLogin.visibility = View.VISIBLE
-                vwBgDimmedLogin.visibility = View.VISIBLE
             } else {
-                btnLogin.isEnabled = true
-                pbLogin.visibility = View.INVISIBLE
-                vwBgDimmedLogin.visibility = View.INVISIBLE
+                btnLogin.visibility = View.VISIBLE
+                pbLogin.visibility = View.GONE
             }
         }
     }

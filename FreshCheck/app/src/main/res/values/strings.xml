@@ -35,4 +35,7 @@
     <string name="reset_link_send">The reset link will be emailed to you.</string>
     <string name="cancel">Cancel</string>
     <string name="send">Send</string>
+    <string name="name">Name</string>
+    <string name="prediction">Prediction</string>
+    <string name="back">Back</string>
 </resources>
