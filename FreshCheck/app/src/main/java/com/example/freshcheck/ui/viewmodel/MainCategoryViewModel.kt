@@ -16,11 +16,15 @@ class MainCategoryViewModel() : ViewModel() {
     private val _fruitProducts = MutableStateFlow<ResultSealed<List<Product>>>(ResultSealed.Initial)
     val fruitProducts = _fruitProducts.asStateFlow()
 
+    private val _vegetableProducts = MutableStateFlow<ResultSealed<List<Product>>>(ResultSealed.Initial)
+    val vegetableProducts = _vegetableProducts.asStateFlow()
+
     init {
         fetchFruitProducts()
+        fetchVegetableProducts()
     }
 
-    fun fetchFruitProducts() {
+    private fun fetchFruitProducts() {
         viewModelScope.launch {
             _fruitProducts.emit(ResultSealed.Loading)
         }
@@ -34,6 +38,24 @@ class MainCategoryViewModel() : ViewModel() {
             }.addOnFailureListener {
                 viewModelScope.launch {
                     _fruitProducts.emit(ResultSealed.Error(it.message.toString()))
+                }
+            }
+    }
+
+    private fun fetchVegetableProducts() {
+        viewModelScope.launch {
+            _vegetableProducts.emit(ResultSealed.Loading)
+        }
+        firestore.collection("Products")
+            .whereEqualTo("category", "Sayur").get()
+            .addOnSuccessListener { result ->
+                val vegetableProductsList = result.toObjects(Product::class.java)
+                viewModelScope.launch {
+                    _vegetableProducts.emit(ResultSealed.Success(vegetableProductsList))
+                }
+            }.addOnFailureListener {
+                viewModelScope.launch {
+                    _vegetableProducts.emit(ResultSealed.Error(it.message.toString()))
                 }
             }
     }

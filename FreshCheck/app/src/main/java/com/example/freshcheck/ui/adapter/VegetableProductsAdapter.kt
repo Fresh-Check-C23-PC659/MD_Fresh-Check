@@ -12,10 +12,10 @@ import com.example.freshcheck.databinding.ShopItemBinding
 import java.text.DecimalFormat
 import java.util.Locale
 
+class VegetableProductsAdapter :
+    RecyclerView.Adapter<VegetableProductsAdapter.VegetableProductsViewHolder>() {
 
-class FruitProductsAdapter : RecyclerView.Adapter<FruitProductsAdapter.FruitProductsViewHolder>() {
-
-    inner class FruitProductsViewHolder(private val binding: ShopItemBinding) :
+    inner class VegetableProductsViewHolder(private val binding: ShopItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product) {
@@ -48,20 +48,29 @@ class FruitProductsAdapter : RecyclerView.Adapter<FruitProductsAdapter.FruitProd
     }
 
     val differ = AsyncListDiffer(this, diffCallback)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FruitProductsViewHolder {
-        return FruitProductsViewHolder(
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): VegetableProductsViewHolder {
+        return VegetableProductsViewHolder(
             ShopItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
+    override fun onBindViewHolder(
+        holder: VegetableProductsViewHolder,
+        position: Int,
+    ) {
+        val product = differ.currentList[position]
+        holder.bind(product)
+    }
+
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
 
-    override fun onBindViewHolder(holder: FruitProductsViewHolder, position: Int) {
-        val product = differ.currentList[position]
-        holder.bind(product)
-    }
+
 }

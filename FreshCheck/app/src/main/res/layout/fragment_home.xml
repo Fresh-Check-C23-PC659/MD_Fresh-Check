@@ -70,9 +70,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_item_fruits"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:orientation="vertical"
                 tools:listitem="@layout/shop_item" />
 
             <View
@@ -115,9 +114,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_item_vegetable"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:orientation="vertical"
                 tools:listitem="@layout/shop_item" />
         </LinearLayout>
     </ScrollView>

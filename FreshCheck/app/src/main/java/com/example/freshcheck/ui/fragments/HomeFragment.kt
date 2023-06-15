@@ -16,18 +16,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.freshcheck.ResultSealed
 import com.example.freshcheck.databinding.FragmentHomeBinding
 import com.example.freshcheck.ui.adapter.FruitProductsAdapter
-import com.example.freshcheck.ui.adapter.ItemAdapterTest
+import com.example.freshcheck.ui.adapter.VegetableProductsAdapter
 import com.example.freshcheck.ui.viewmodel.MainCategoryViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
-@Suppress("DEPRECATION")
+
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var fruitProductsAdapter: FruitProductsAdapter
+    private lateinit var vegetableProductsAdapter: VegetableProductsAdapter
     private val viewModel: MainCategoryViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
@@ -44,29 +45,37 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRvFruits()
-        launchSession()
-
-        val vegetableRV = binding.rvItemVegetable
-        val layoutManagerVegetables =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        vegetableRV.layoutManager = layoutManagerVegetables
-        val items = listOf(
-            "Item 1",
-            "Item 2",
-            "Item 3",
-            "Item 4",
-            "Item 5",
-            "Item 6",
-            "Item 7",
-            "Item 8",
-            "Item 9",
-            "Item 10"
-        )
-        val adapter = ItemAdapterTest(items)
-        vegetableRV.adapter = adapter
+        setupRvVegetables()
+        launchRvFruits()
+        launchRvVegetable()
     }
 
-    private fun launchSession() {
+    private fun launchRvVegetable() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.vegetableProducts.collectLatest {
+                    when (it) {
+                        is ResultSealed.Loading -> {
+
+                        }
+
+                        is ResultSealed.Success -> {
+                            vegetableProductsAdapter.differ.submitList(it.data)
+                        }
+
+                        is ResultSealed.Error -> {
+                            Log.e(TAG, it.error)
+                            Toast.makeText(requireContext(), it.error, Toast.LENGTH_SHORT).show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+    }
+
+    private fun launchRvFruits() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.fruitProducts.collectLatest {
@@ -78,14 +87,25 @@ class HomeFragment : Fragment() {
                         is ResultSealed.Success -> {
                             fruitProductsAdapter.differ.submitList(it.data)
                         }
+
                         is ResultSealed.Error -> {
                             Log.e(TAG, it.error)
                             Toast.makeText(requireContext(), it.error, Toast.LENGTH_SHORT).show()
                         }
+
                         else -> Unit
                     }
                 }
             }
+        }
+    }
+
+    private fun setupRvVegetables() {
+        vegetableProductsAdapter = VegetableProductsAdapter()
+        binding.rvItemVegetable.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = vegetableProductsAdapter
         }
     }
 

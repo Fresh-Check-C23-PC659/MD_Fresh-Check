@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.freshcheck.R
 import com.example.freshcheck.databinding.ActivityResultBinding
 import kotlinx.coroutines.Dispatchers
@@ -34,12 +36,12 @@ class ResultActivity : AppCompatActivity() {
                 loadImage(imagePath)
             }
 
-            Glide.with(this)
-                .load(imagePath)
-                .into(binding.ivResultFragment)
 
-            binding.nameTextView.text = name
-            binding.predictionTextView.text = prediction
+            val boldName = "<b><br><i>${name?.replaceFirstChar { it.uppercaseChar() }}<i></b>"
+            val boldPrediction = "<b><br><i>${prediction?.replaceFirstChar { it.uppercaseChar() }}<i></b>"
+            binding.nameTextView.text = HtmlCompat.fromHtml("Vegetable/Fruit Name :$boldName", HtmlCompat.FROM_HTML_MODE_COMPACT)
+            binding.predictionTextView.text = HtmlCompat.fromHtml("Level :$boldPrediction", HtmlCompat.FROM_HTML_MODE_COMPACT)
+
 
             val backButton = binding.backButton
             backButton.setOnClickListener {
@@ -60,6 +62,8 @@ class ResultActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             Glide.with(applicationContext)
                 .load(imagePath)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(binding.ivResultFragment)
         }
     }

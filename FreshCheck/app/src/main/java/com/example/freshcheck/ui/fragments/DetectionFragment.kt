@@ -189,6 +189,7 @@ class DetectionFragment : Fragment() {
         showLoading(true)
 
         lifecycleScope.launch {
+            showLoading(true)
             try {
                 val response = apiService.uploadFile(filePart)
 

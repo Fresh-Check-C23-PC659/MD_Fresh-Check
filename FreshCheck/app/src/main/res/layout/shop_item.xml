@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="150dp"
-    android:layout_height="190dp"
+    android:layout_height="210dp"
     app:cardElevation="10dp"
     app:cardCornerRadius="15dp"
     android:layout_margin="10dp">
@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/iv_item"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="110dp"
             android:scaleType="centerCrop"
             android:contentDescription="@string/item_shop"
@@ -31,28 +31,32 @@
 
         <TextView
             android:id="@+id/tv_item_name"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/dark_green"
-            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="8dp"
+            android:maxLines="3"
             android:text="@string/item_name"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
             android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/light_green"
-            android:textSize="11sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="8dp"
             android:text="@string/price"
+            android:textColor="@color/light_green"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_name" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
