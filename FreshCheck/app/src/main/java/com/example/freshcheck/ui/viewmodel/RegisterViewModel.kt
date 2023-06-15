@@ -20,24 +20,11 @@ class RegisterViewModel : ViewModel() {
     private val _register = MutableStateFlow<ResultSealed<User>>(ResultSealed.Initial)
     val register: Flow<ResultSealed<User>> = _register
 
-//    fun createAccountWithEmailAndPassword(user: User, password: String) {
-//        runBlocking {
-//            _register.emit(ResultSealed.Loading)
-//        }
-//        firebaseAuth.createUserWithEmailAndPassword(user.email, password)
-//            .addOnSuccessListener {
-//                it.user?.let {
-//                    saveUser(it.uid, user)
-//                }
-//            }.addOnFailureListener {
-//                _register.value = ResultSealed.Error(it.message.toString())
-//            }
-//    }
 
     fun createAccountWithEmailAndPassword(user: User, password: String) {
         viewModelScope.launch {
             _register.emit(ResultSealed.Loading)
-            var loadingShown = true // Flag to track if loading state has been shown
+            var loadingShown = true
 
             try {
                 val authResult =

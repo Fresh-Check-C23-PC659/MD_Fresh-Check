@@ -203,7 +203,6 @@ class DetectionFragment : Fragment() {
 
             } catch (e: Exception) {
                 showSnackbar("Upload failed: ${e.message}")
-                Log.e("SINI YANG DITEST", e.message.toString())
             } finally {
                 showLoading(false)
             }

@@ -2,6 +2,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.freshcheck.ui.viewmodel.LoginViewModel
+import com.example.freshcheck.ui.viewmodel.MainCategoryViewModel
 import com.example.freshcheck.ui.viewmodel.ProfileViewModel
 import com.example.freshcheck.ui.viewmodel.RegisterViewModel
 import java.lang.ref.WeakReference
@@ -22,6 +23,9 @@ class ViewModelFactory private constructor(context: Context) : ViewModelProvider
             }
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 ProfileViewModel() as T
+            }
+            modelClass.isAssignableFrom(MainCategoryViewModel::class.java) -> {
+                MainCategoryViewModel() as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.simpleName}")

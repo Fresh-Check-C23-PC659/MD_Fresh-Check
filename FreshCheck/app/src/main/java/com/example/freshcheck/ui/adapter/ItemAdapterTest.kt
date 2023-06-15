@@ -10,7 +10,7 @@ class ItemAdapterTest(private val items: List<String>) :
 
     class ItemViewHolder(binding: ShopItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val tvItemName = binding.tvItemName
-        val tvItemStore = binding.tvStoreName
+        val tvItemStore = binding.tvItemName
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
