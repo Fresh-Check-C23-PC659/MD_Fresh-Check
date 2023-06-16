@@ -27,11 +27,20 @@ class HistoryFragment : Fragment() {
 
         val rvHistory = binding.rvItemHistory
 
+        val tvEmptyState = binding.tvEmptyList
+
+
         val layoutManagerVegetables = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         rvHistory.layoutManager = layoutManagerVegetables
-        val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10")
+        val items = emptyList<String>()
         val adapter = ItemHistoryAdapterTest(items)
         rvHistory.adapter = adapter
+
+        if (items.isEmpty()) {
+            tvEmptyState.visibility = View.VISIBLE
+        } else {
+            tvEmptyState.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {

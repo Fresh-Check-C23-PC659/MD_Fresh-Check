@@ -48,4 +48,6 @@
     <string name="vegetable_fruit_name">Vegetable/Fruit Name :</string>
     <string name="fresh">Fresh</string>
     <string name="proceed">Proceed</string>
+    <string name="history_is_empty">History is Empty</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
 </resources>

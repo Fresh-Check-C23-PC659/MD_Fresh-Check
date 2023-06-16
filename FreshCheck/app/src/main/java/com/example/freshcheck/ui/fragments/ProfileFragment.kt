@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.freshcheck.R
 import com.example.freshcheck.databinding.FragmentProfileBinding
 import com.example.freshcheck.ui.activities.LoginActivity
 import com.example.freshcheck.ui.fragments.DetectionFragment.Companion.PREF_FILE_PATH_KEY
@@ -41,21 +43,28 @@ class ProfileFragment : Fragment() {
 
         binding.apply {
             cvLogoutProfile.setOnClickListener {
-                viewModel.logout()
-                clearSharedPreferences()
-                val intent = Intent(requireActivity(), LoginActivity::class.java)
-                startActivity(intent)
-                requireActivity().finish()
+                val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_logout_confirmation, null)
+                val dialogBuilder = AlertDialog.Builder(requireContext())
+                    .setTitle("Logout Confirmation")
+                    .setView(dialogView)
+                    .setPositiveButton("Logout") { dialog, _ ->
+                        viewModel.logout()
+                        val intent = Intent(requireActivity(), LoginActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                val dialog = dialogBuilder.create()
+                dialog.show()
             }
         }
-    }
 
-    private fun clearSharedPreferences() {
-        sharedPreferences.edit().remove(PREF_FILE_PATH_KEY).apply()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        fun onDestroyView() {
+            super.onDestroyView()
+            _binding = null
+        }
     }
 }
