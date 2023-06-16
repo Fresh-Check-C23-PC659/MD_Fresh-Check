@@ -2,12 +2,12 @@
     <!-- Base application theme. -->
     <style name="Theme.FreshCheck" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/light_green</item>
-        <item name="colorPrimaryVariant">@color/dark_green</item>
+        <item name="colorPrimary">@color/light_orange</item>
+        <item name="colorPrimaryVariant">@color/dark_orange</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/dark_green</item>
-        <item name="colorSecondaryVariant">@color/light_green</item>
+        <item name="colorSecondary">@color/dark_orange</item>
+        <item name="colorSecondaryVariant">@color/light_orange</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>

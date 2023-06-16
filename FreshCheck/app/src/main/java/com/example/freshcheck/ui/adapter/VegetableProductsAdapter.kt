@@ -2,6 +2,7 @@ package com.example.freshcheck.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -12,11 +13,33 @@ import com.example.freshcheck.databinding.ShopItemBinding
 import java.text.DecimalFormat
 import java.util.Locale
 
-class VegetableProductsAdapter :
+
+interface ItemClickListener2 {
+    fun onItemClick(product: Product)
+}
+
+class VegetableProductsAdapter(private val itemClickListener: ItemClickListener2) :
     RecyclerView.Adapter<VegetableProductsAdapter.VegetableProductsViewHolder>() {
 
     inner class VegetableProductsViewHolder(private val binding: ShopItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                val product = differ.currentList[position]
+                itemClickListener.onItemClick(product)
+                binding.apply {
+                    Glide.with(itemView).load(product.images[0]).into(ivItem)
+                    tvItemName.text = product.name
+                    tvPrice.text = formatPrice(product.price)
+                }
+            }
+        }
 
         fun bind(product: Product) {
             binding.apply {
@@ -71,6 +94,5 @@ class VegetableProductsAdapter :
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
 
 }

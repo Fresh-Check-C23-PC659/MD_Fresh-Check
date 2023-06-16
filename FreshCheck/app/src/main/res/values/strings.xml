@@ -30,7 +30,7 @@
     <string name="detection_file">Detection File</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Log out</string>
     <string name="fresh_check">Fresh Check</string>
     <string name="reset_link_send">The reset link will be emailed to you.</string>
     <string name="cancel">Cancel</string>
@@ -39,4 +39,13 @@
     <string name="prediction">Prediction</string>
     <string name="back">Back</string>
     <string name="result">Result</string>
+    <string name="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas turpis nisl, maximus vitae pharetra viverra.
+        \nultricies id elit. Maecenas eu purus a mauris tincidunt aliquet et sit amet velit. Sed ut lectus ut ligula imperdiet
+    </string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="level">Level : </string>
+    <string name="banana">Banana</string>
+    <string name="vegetable_fruit_name">Vegetable/Fruit Name :</string>
+    <string name="fresh">Fresh</string>
+    <string name="proceed">Proceed</string>
 </resources>

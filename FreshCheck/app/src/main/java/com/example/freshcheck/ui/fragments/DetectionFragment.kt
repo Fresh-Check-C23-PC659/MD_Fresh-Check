@@ -15,19 +15,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.freshcheck.R
 import com.example.freshcheck.data.remote.retrofit.ApiConfig
 import com.example.freshcheck.data.remote.retrofit.ApiService
 import com.example.freshcheck.databinding.FragmentDetectionBinding
-import com.example.freshcheck.ui.activities.ResultActivity
 import com.example.freshcheck.ui.activities.ViewFinderActivity
 import com.example.freshcheck.utils.rotateFile
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -193,16 +200,34 @@ class DetectionFragment : Fragment() {
             try {
                 val response = apiService.uploadFile(filePart)
 
-                val resultIntent = Intent(requireContext(), ResultActivity::class.java)
-                val bundle = Bundle().apply {
-                    putString("imagePath", file.path)
-                    putString("name", response.name)
-                    putString("prediction", response.prediction)
+                val dialogView =
+                    LayoutInflater.from(requireContext()).inflate(R.layout.result_dialog, null)
+
+                val img = dialogView.findViewById<ImageView>(R.id.iv_image_dialog)
+                val name = dialogView.findViewById<TextView>(R.id.tv_name_dialog)
+                val level = dialogView.findViewById<TextView>(R.id.tv_level_dialog)
+                val btnProceed = dialogView.findViewById<Button>(R.id.btn_proceed)
+
+                Glide.with(dialogView)
+                    .load(file.path)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(img)
+                name.text = response.name
+                level.text = response.prediction
+
+                val dialog = BottomSheetDialog(requireContext(), R.style.DialogStyle)
+                dialog.setContentView(dialogView)
+                dialog.setTitle("Detection Result")
+                dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                dialog.show()
+
+                btnProceed.setOnClickListener {
+                    dialog.dismiss()
                 }
-                resultIntent.putExtras(bundle)
-                startActivity(resultIntent)
 
             } catch (e: Exception) {
+                Log.e("Detection FG", e.message.toString())
                 showSnackbar("Upload failed: ${e.message}")
             } finally {
                 showLoading(false)

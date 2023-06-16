@@ -24,7 +24,7 @@
             android:text="@string/register"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="@color/light_green"
+            android:textColor="@color/light_orange"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -129,7 +129,7 @@
             android:backgroundTint="@color/black"
             android:text="@string/login"
             android:textAlignment="center"
-            android:textColor="@color/light_green"
+            android:textColor="@color/light_orange"
             android:textStyle="bold" />
     </LinearLayout>
 

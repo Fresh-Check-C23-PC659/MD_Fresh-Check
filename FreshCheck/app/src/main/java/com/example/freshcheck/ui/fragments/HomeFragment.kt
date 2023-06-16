@@ -1,6 +1,7 @@
 package com.example.freshcheck.ui.fragments
 
 import ViewModelFactory
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,8 +15,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.freshcheck.ResultSealed
+import com.example.freshcheck.data.Product
 import com.example.freshcheck.databinding.FragmentHomeBinding
+import com.example.freshcheck.ui.activities.ProductDetailActivity
 import com.example.freshcheck.ui.adapter.FruitProductsAdapter
+import com.example.freshcheck.ui.adapter.ItemClickListener
+import com.example.freshcheck.ui.adapter.ItemClickListener2
 import com.example.freshcheck.ui.adapter.VegetableProductsAdapter
 import com.example.freshcheck.ui.viewmodel.MainCategoryViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +28,7 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), ItemClickListener, ItemClickListener2 {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -100,8 +105,21 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onItemClick(product: Product) {
+        navigateToProductDetail(product)
+    }
+
+    private fun navigateToProductDetail(product: Product) {
+        val intent = Intent(activity, ProductDetailActivity::class.java)
+        intent.putExtra("productImage", product.images.toTypedArray())
+        intent.putExtra("productName", product.name)
+        intent.putExtra("productDesc", product.description)
+        intent.putExtra("productPrice", product.price)
+        startActivity(intent)
+    }
+
     private fun setupRvVegetables() {
-        vegetableProductsAdapter = VegetableProductsAdapter()
+        vegetableProductsAdapter = VegetableProductsAdapter(this)
         binding.rvItemVegetable.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -110,7 +128,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRvFruits() {
-        fruitProductsAdapter = FruitProductsAdapter()
+        fruitProductsAdapter = FruitProductsAdapter(this)
         binding.rvItemFruits.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

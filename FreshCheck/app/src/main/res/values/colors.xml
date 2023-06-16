@@ -13,4 +13,7 @@
 <!--    Fresh Check Color Palette-->
     <color name="dark_green">#0C3D27</color>
     <color name="light_green">#54C56D</color>
+
+    <color name="light_orange">#E99936</color>
+    <color name="dark_orange">#D07D16</color>
 </resources>

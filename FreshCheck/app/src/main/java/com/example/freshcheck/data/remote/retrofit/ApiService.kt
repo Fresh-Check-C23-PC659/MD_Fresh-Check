@@ -8,7 +8,7 @@ import retrofit2.http.Part
 
 interface ApiService {
     @Multipart
-    @POST("/")
+    @POST("predict")
     suspend fun uploadFile(
         @Part filePart: MultipartBody.Part
     ): Response

@@ -27,13 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ProgressBar
-                    android:id="@+id/pb_detection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="invisible"/>
-
                 <ImageView
                     android:id="@+id/iv_detection_fragment"
                     android:layout_width="match_parent"
@@ -45,6 +38,13 @@
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
                     android:src="@drawable/ic_image_24dp" />
+
+                <ProgressBar
+                    android:id="@+id/pb_detection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="invisible" />
 
             </FrameLayout>
 

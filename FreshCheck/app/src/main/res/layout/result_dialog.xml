@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_image_dialog"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_image_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_name_dialog_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/vegetable_fruit_name"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_image_dialog"
+        app:layout_constraintStart_toStartOf="@+id/iv_image_dialog"
+        app:layout_constraintTop_toBottomOf="@+id/iv_image_dialog" />
+
+    <TextView
+        android:id="@+id/tv_name_dialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/banana"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tv_name_dialog_desc"
+        app:layout_constraintStart_toStartOf="@+id/tv_name_dialog_desc"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_dialog_desc" />
+
+    <TextView
+        android:id="@+id/tv_level_dialog_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/level"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_name_dialog"
+        app:layout_constraintStart_toStartOf="@+id/tv_name_dialog"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_dialog" />
+
+    <TextView
+        android:id="@+id/tv_level_dialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/fresh"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tv_level_dialog_desc"
+        app:layout_constraintStart_toStartOf="@+id/tv_level_dialog_desc"
+        app:layout_constraintTop_toBottomOf="@+id/tv_level_dialog_desc" />
+
+    <Button
+        android:id="@+id/btn_proceed"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/proceed"
+        android:background="@drawable/btn_rounded_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_level_dialog"
+        app:layout_constraintStart_toStartOf="@+id/tv_level_dialog"
+        app:layout_constraintTop_toBottomOf="@+id/tv_level_dialog" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,7 @@ package com.example.freshcheck.ui.activities.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.freshcheck.R
 import com.example.freshcheck.databinding.ActivityMainBinding
-import com.example.freshcheck.databinding.FragmentDetectionBinding
 import com.example.freshcheck.ui.activities.HomeActivity
 import com.example.freshcheck.ui.activities.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -13,7 +11,6 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var bindingDF: FragmentDetectionBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {

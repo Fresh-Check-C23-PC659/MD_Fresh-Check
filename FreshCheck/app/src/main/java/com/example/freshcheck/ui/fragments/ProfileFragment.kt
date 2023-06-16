@@ -40,7 +40,7 @@ class ProfileFragment : Fragment() {
 
 
         binding.apply {
-            btnLogoutProfile.setOnClickListener {
+            cvLogoutProfile.setOnClickListener {
                 viewModel.logout()
                 clearSharedPreferences()
                 val intent = Intent(requireActivity(), LoginActivity::class.java)

@@ -51,7 +51,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginHorizontal="8dp"
             android:text="@string/price"
-            android:textColor="@color/light_green"
+            android:textColor="@color/light_orange"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
